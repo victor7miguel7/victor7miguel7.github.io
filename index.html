@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>GitHub Top Languages</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>GitHub Top Languages</h1>
+  <h2>Linguagens mais usadas nos meus repositórios do GitHub:</h2>
+  <div id="top-languages"></div>
+
+  <script src="https://api.github.com/users/victor7miguel7/repos?per_page=100&type=owner&sort=pushed&direction=desc&callback=getTopLanguages"></script>
+  <script>
+    function getTopLanguages(data) {
+      var languages = {};
+      for (var i = 0; i < data.data.length; i++) {
+        var repo = data.data[i];
+        var language = repo.language;
+        if (language) {
+          if (languages[language]) {
+            languages[language]++;
+          } else {
+            languages[language] = 1;
+          }
+        }
+      }
+
+      var sortedLanguages = Object.keys(languages).sort(function(a, b) {
+        return languages[b] - languages[a];
+      });
+
+      var topLanguages = sortedLanguages.slice(0, 5);
+      var output = '<ul>';
+      for (var j = 0; j < topLanguages.length; j++) {
+        output += '<li>' + topLanguages[j] + '</li>';
+      }
+      output += '</ul>';
+
+      document.getElementById('top-languages').innerHTML = output;
+    }
+  </script>
+</body>
+</html>
